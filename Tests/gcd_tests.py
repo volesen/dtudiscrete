@@ -5,12 +5,12 @@ from random import randint
 
 from extended_euclidean import egcd
 
-testdata = [(randint(0,2^16), randint(0,2^16)) for i in range(0,100)]
+testdata = [(randint(0, 2 ^ 16), randint(0, 2 ^ 16)) for i in range(0, 100)]
 
 
 @pytest.mark.parametrize('a,b', testdata)
 def test_gcd(a, b):
-    table = egcd(a,b)
+    table = egcd(a, b)
     for row in table:
         k, r, s, t = row
 
@@ -21,4 +21,4 @@ def test_gcd(a, b):
     k, r, s, t = table[-2]
 
     # Assert gcd(a,b) is correct
-    assert r == gcd(a,b)
+    assert r == gcd(a, b)
