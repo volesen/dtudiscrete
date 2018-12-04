@@ -30,7 +30,9 @@ class Polynomial:
         for i in range(0, resultDegree + 1):
             coef = 0
             for j in range(0, self.degree() + 1):
-                coef += self
+                coef += self[j]*pol[i-j]
+            result[i] = coef
+        return result
 
     def degree(self):
         return max(self.coefs.keys)
