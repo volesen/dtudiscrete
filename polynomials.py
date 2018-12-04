@@ -1,4 +1,7 @@
 class Polynomial:
+    def __init__(self):
+        self.coefs = {}
+
     def __init__(self, coefs):
         self.coefs = coefs
     
@@ -10,7 +13,7 @@ class Polynomial:
         for exponent, coef in self.coefs.items():
             result += coef*(x**exponent)
         return result
-    
+
     def __add__(self, pol):
         result = {}
         for exponent, coef in self.coefs.items():
@@ -21,7 +24,16 @@ class Polynomial:
             else:
                 result[exponent] = coef
         return Polynomial(result)
-    
+
+    def __neg__(self):
+        result = {}
+        for exponent, coef in self.coefs.items():
+            result[exponent] = -coef
+        return Polynomial(result)
+
+    def __sub__(self, pol):
+        return self + -pol
+
     def __mul__(self, pol):
         result_degree = self.degree() + pol.degree()
         result = {}
@@ -31,6 +43,23 @@ class Polynomial:
                 coef += self[j]*pol[i-j]
             result[i] = coef
         return Polynomial(result)
+
+    def __floordiv__(self, other):
+        quo, mod = self.divide(other).quo
+        return quo
+
+    def __mod__(self, other):
+        quo, mod = self.divide(other).quo
+        return mod
+
+    def divide(self, pol):
+        quo = Polynomial()
+        p = self
+        while p.degree() >= pol.degree():
+            factor = Polynomial({p.degree() - pol.degree(): pol[pol.degree()] / p[p.degree()]})
+            p -= pol * factor
+            quo += factor
+        return quo, p
 
     def degree(self):
         return max(self.coefs.keys())
