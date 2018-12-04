@@ -5,8 +5,9 @@ from pretty_print import pretty_print_table
 @click.command()
 @click.argument('a', type=int)
 @click.argument('b', type=int)
-def egcd(a, b):
-    click.echo(pretty_print_table(a, b))
+@click.option('--use-latex', is_flag = True)
+def egcd(a, b, use_latex):
+    click.echo(pretty_print_table(a, b, "latex" if use_latex else "plain"))
 
 
 

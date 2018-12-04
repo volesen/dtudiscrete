@@ -9,7 +9,7 @@ def get_explanation(table, k):
     return f'Da {r2} = {r2//r1}*{r1} + {r}'
 
 
-def pretty_print_table(a,b):
+def pretty_print_table(a,b,tablefmt="plain"):
     table = egcd(a, b)
     table_with_explanation = [('k', 'r_k', 's_k', 't_k', 'Forklaring')]
 
@@ -19,4 +19,4 @@ def pretty_print_table(a,b):
     for i in range(2,len(table)):   
         table_with_explanation.append((*table[i], get_explanation(table, i)))
 
-    return tabulate(table_with_explanation)
+    return tabulate(table_with_explanation,tablefmt=tablefmt)
