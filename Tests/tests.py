@@ -7,7 +7,6 @@ from extended_euclidean import egcd
 
 testdata = [(randint(0,2^16), randint(0,2^16)) for i in range(0,100)]
 
-print('hello')
 
 @pytest.mark.parametrize('a,b', testdata)
 def test_gcd(a, b):

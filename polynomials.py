@@ -27,10 +27,10 @@ class Polynomial:
     def __mul__(self, pol):
         resultDegree = self.degree() + pol.degree()
         result = {}
-        for i in [0..resultDegree + 1]:
+        for i in range(0, resultDegree + 1):
             coef = 0
-            for j in [0..self.degree()]:
+            for j in range(0, self.degree() + 1):
                 coef += self
 
-    def degree(self)
+    def degree(self):
         return max(self.coefs.keys)
