@@ -23,7 +23,3 @@ def test_gcd(a, b):
 
     # Assert gcd(a,b) is correct
     assert r == gcd(a,b)
-
-#@pytest.mark.parametrize('a,b', testdata)
-#def test_polynomial(a, b):
-        
