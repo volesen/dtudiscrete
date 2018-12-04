@@ -1,10 +1,9 @@
 def egcd(a, b):
-    ''' Generates table with all calculations for Extended Euclidean algortihm '''
+    ''' Generates table with all calculations for Extended Euclidean Algortihm '''
     table = []
 
     table.append((0, a, 1, 0))
     table.append((1, b, 0, 1))
-
     
     k = 1
     while table[k][1] != 0:
