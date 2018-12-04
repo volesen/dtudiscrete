@@ -12,8 +12,11 @@ def random_polynomial(min_int, max_int, degree):
     return Polynomial(result)
 
 
-
-test_data = [(random_polynomial(-2 ^ 16, 2 ^ 16, 4), random_polynomial(-2 ^ 16, 2 ^ 16, 4)) for i in range(0, 100)]
+min_int = -2 ^ 16
+max_int = 2 ^ 16
+degree = 4
+test_data = [(random_polynomial(min_int, max_int, degree), random_polynomial(min_int, max_int, degree))
+             for i in range(0, 100)]
 
 
 @pytest.mark.parametrize('a,b', test_data)

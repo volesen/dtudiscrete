@@ -5,10 +5,13 @@ from random import randint
 
 from extended_euclidean import egcd
 
-testdata = [(randint(0, 2 ^ 16), randint(0, 2 ^ 16)) for i in range(0, 100)]
+min_int = -2 ^ 16
+max_int = 2 ^ 16
+
+test_data = [(randint(0, max_int), randint(0, max_int)) for i in range(0, 100)]
 
 
-@pytest.mark.parametrize('a,b', testdata)
+@pytest.mark.parametrize('a,b', test_data)
 def test_gcd(a, b):
     table = egcd(a, b)
     for row in table:
