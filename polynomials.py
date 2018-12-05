@@ -1,6 +1,6 @@
 class Polynomial:
     def __init__(self, coefs = {}):
-        print(coefs)
+        # Eg. 1 + 2x^1+5x^2 = Polynomial({0: 1, 1:2, 2: 5})
         self.coefs = {}
         for exponent, coef in coefs.items():
             if coef != 0:
