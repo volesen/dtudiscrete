@@ -1,10 +1,11 @@
 class Polynomial:
-    def __init__(self):
+    def __init__(self, coefs = {}):
+        print(coefs)
         self.coefs = {}
+        for exponent, coef in coefs.items():
+            if coef != 0:
+                self.coefs[exponent] = coef
 
-    def __init__(self, coefs):
-        self.coefs = coefs
-    
     def __getitem__(self, key):
         return self.coefs[key] if key in self.coefs.keys() else 0
 
@@ -35,32 +36,34 @@ class Polynomial:
         return self + -pol
 
     def __mul__(self, pol):
-        result_degree = self.degree() + pol.degree()
+        result_degree = self.degree + pol.degree
         result = {}
         for i in range(0, result_degree + 1):
             coef = 0
-            for j in range(0, max(self.degree() + 1, i)):
+            for j in range(0, max(self.degree + 1, i)):
                 coef += self[j]*pol[i-j]
             result[i] = coef
         return Polynomial(result)
 
     def __floordiv__(self, other):
-        quo, mod = self.divide(other).quo
+        quo = self.divide(other)[0]
         return quo
 
     def __mod__(self, other):
-        quo, mod = self.divide(other).quo
+        mod = self.divide(other)[1]
         return mod
 
     def divide(self, pol):
+        raise Exception("Not implemented")
         quo = Polynomial()
         p = self
-        while p.degree() >= pol.degree():
-            factor = Polynomial({p.degree() - pol.degree(): pol[pol.degree()] / p[p.degree()]})
+        while p.degree >= pol.degree:
+            factor = Polynomial({p.degree - pol.degree: pol[pol.degree] / p[p.degree]})
             p -= pol * factor
             quo += factor
         return quo, p
 
+    @property
     def degree(self):
         return max(self.coefs.keys())
 
