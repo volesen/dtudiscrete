@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import click
 from pretty_print import pretty_print_table
 
