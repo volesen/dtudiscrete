@@ -26,4 +26,3 @@ def congruence_eqn(a, b, n):
 
     return congruence_eqn(a_prime, b_prime, n_prime)
 
-print(congruence_eqn(3,5,9))
