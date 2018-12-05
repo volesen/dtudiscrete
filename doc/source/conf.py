@@ -142,7 +142,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'dtu-discrete.tex', 'dtu-discrete Documentation',
-     'Jonas Ryssel, Albert Garde, Mikkel Goldschmidt, Sofus Rose, Vincent Olesen', 'manual'),
+     'J. Ryssel, A. Garde, M. Goldschmidt, S. Rose, V. Olesen', 'manual'),
 ]
 
 
