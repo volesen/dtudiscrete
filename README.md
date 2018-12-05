@@ -15,7 +15,7 @@ To run the examples:
 	* `pip install -r requirements.txt` will do it.
 
 2. Enjoy!
-	* GCF: Currently, run `python3 cli.py <a> <b>`, replacing a and b with integers,
+	* GCF: Currently, run `./cli.py <a> <b>`, replacing a and b with integers,
 	to get the GCF.
 
 3. Test!
