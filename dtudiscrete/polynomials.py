@@ -1,4 +1,13 @@
 class Polynomial:
+    '''
+        A representation of a Polynomial.
+        
+        Class Attributes
+			coefs: Coefficients.
+			degree: The degree of the polynomial.
+    '''
+    
+    
     def __init__(self, coefs = {}):
         # Eg. 1 + 2x^1+5x^2 = Polynomial({0: 1, 1:2, 2: 5})
         self.coefs = {}
