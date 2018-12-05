@@ -4,7 +4,9 @@ from extended_euclidean import egcd
 # TODO: Notes use egcd(n, a) which switches s, t. Fix consistency
 
 def chinese_remainder(b1, b2, n1, n2):
-    ''' Solves for x in "x * a ≡ b (mod n)" with steps '''
+    '''
+        This function solves for the chinese remainder (TODO: Equation).
+    '''
 
     if gcd(n1, n2) != 1:
     	raise NotImplementedError
