@@ -2,11 +2,9 @@ import pytest
 from math import gcd
 from random import randint
 
+from ..extended_euclidean import egcd
 
-from extended_euclidean import egcd
-
-min_int = -2 ^ 16
-max_int = 2 ^ 16
+max_int = 2**16
 
 test_data = [(randint(0, max_int), randint(0, max_int)) for i in range(0, 100)]
 

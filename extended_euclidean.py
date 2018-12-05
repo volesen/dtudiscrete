@@ -5,9 +5,8 @@ def egcd(a, b):
     table.append((0, a, 1, 0))
     table.append((1, b, 0, 1))
     
-    k = 0
-    r = None
-    while r != 0:
+    k = 1
+    while table[k][1]:
         k += 1
         k1, r1, s1, t1 = table[k-2]
         k2, r2, s2, t2 = table[k-1]
