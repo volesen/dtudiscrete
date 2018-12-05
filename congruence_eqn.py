@@ -4,7 +4,7 @@ from inverse import inverse_mod
 
 # TODO: Notes use egcd(n, a) which switches s, t. Fix consistency
 
-def congruence_eqn(a, b, n):
+def congruence_eqn(a, b, n, steps = True):
     ''' Solves for x in "x * a ≡ b (mod n)" with steps '''
 
     d = gcd(a, n)
