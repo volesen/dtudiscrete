@@ -1,6 +1,5 @@
 import pytest
 from random import randint
-
 from dtudiscrete.polynomials import Polynomial
 
 
@@ -19,7 +18,7 @@ test_data = [(random_polynomial(min_int, max_int, degree), random_polynomial(min
 
 div_test_data = [(Polynomial({0: 16, 2: -2, 3: 8, 4: 1}), Polynomial({0: 1, 1: -4, 2: 2}), Polynomial({0: 35/4, 1: 5, 2: 1/2}), Polynomial({0: 29/4, 1: 30}))]
 
-
+#p, pol = Polynomial({0: 16, 2: -2, 3: 8, 4: 1}), Polynomial({0: 1, 1: -4, 2: 2})
 @pytest.mark.parametrize('a,b', test_data)
 def test_polynomial_multiplication(a, b):
     product = a * b
