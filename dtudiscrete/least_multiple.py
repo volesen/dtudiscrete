@@ -9,7 +9,6 @@ def lcm(a, b, steps = True):
         
         :param int a: Parameter of the equation.
         :param int b: Parameter of the equation.
-        :param int m: Parameter of the equation.
         :param bool steps: Boolean flag deciding whether to return the steps of the operation.
         
         :return: Steps showing solution for x.
