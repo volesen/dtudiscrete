@@ -54,7 +54,7 @@ class Polynomial:
         return mod
 
     def divide(self, pol):
-        raise Exception("Not implemented")
+        raise NotImplementedError
         quo = Polynomial()
         p = self
         while p.degree >= pol.degree:
