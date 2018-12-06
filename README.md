@@ -42,33 +42,33 @@ The Gold Standard of Tutorials: http://rogerdudler.github.io/git-guide/ . Learn 
 First, this is written by an almost-noob, so don't trust too much in what it says. This is also not meant to be an in depth introduction to git. It should, however, be enough to get you working. Also, it assumes you have a working git installation.
 
 To login to git:
-    1. `git config --global user.name <name>` where name is your git (or GitHub) username.
-    2. `git config --global user.email <email>` where name is your git (or GitHub) email.
-    3. Confirm that the information is correct with `git config --global --list`.
+   1. `git config --global user.name <name>` where name is your git (or GitHub) username.
+   2. `git config --global user.email <email>` where name is your git (or GitHub) email.
+   3. Confirm that the information is correct with `git config --global --list`.
 
 To clone(download) this repository:
-    1. Move to the desired directory and write `git clone https://github.com/volesen/DiscreteMath.git <dir>` where <dir> is the name of the directory to place it in.
+   1. Move to the desired directory and write `git clone https://github.com/volesen/DiscreteMath.git <dir>` where <dir> is the name of the directory to place it in.
 
 To pull(update your local repository) from origin:
-    1. `git pull`.
-    2. Done. If this fails, it's probably because you've changed or removed some files others have also changed or removed.
+   1. `git pull`.
+   2. Done. If this fails, it's probably because you've changed or removed some files others have also changed or removed.
 
 To create a branch:
-    1. Create an issue using the web GUI. From here on <id> will refer to the id of the issue. For example 14.
-    1. Create a new branch `git checkout -b <name>` where <name> is "Issue<id>". This also moves your HEAD to the new branch.
+   1. Create an issue using the web GUI. From here on <id> will refer to the id of the issue. For example 14.
+   1. Create a new branch `git checkout -b <name>` where <name> is "Issue_<id>". This also moves your HEAD to the new branch.
 
 To push (upload) your changes to the current branch:
-    1. Before anything else, make sure to pull the current branch with `git pull`. This helps in dealing with merge conflicts
-    2. `git add .` to add all your changed, deleted and added files to the "staging area".
-    3. `git commit -m "<message>"` to create a "commit" with all your changes. This only changes things in your local repository. <message> should be a short description of what your commit changes. [A great guide to writing good messages](https://chris.beams.io/posts/git-commit/).
-    4. `git push` to push your newly created commit to the branch. This is the first time any changes are made outside of your computer. [branch](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging). If it is a new branch write `git push --set-upstream origin <name>` where <name> is the name of the branch.
-    5. Aaand your done.
+   1. Before anything else, make sure to pull the current branch with `git pull`. This helps in dealing with merge conflicts
+   2. `git add .` to add all your changed, deleted and added files to the "staging area".
+   3. `git commit -m "<message>"` to create a "commit" with all your changes. This only changes things in your local repository. <message> should be a short description of what your commit changes. [A great guide to writing good messages](https://chris.beams.io/posts/git-commit/).
+   4. `git push` to push your newly created commit to the branch. This is the first time any changes are made outside of your computer. [branch](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging). If it is a new branch write `git push --set-upstream origin <name>` where <name> is the name of the branch.
+   5. Aaand your done.
 
 To swap branch (if you want to work at multiple branches simultaneously):
-    1. `git checkout <name>` where <name> is the name of the branch.
+   1. `git checkout <name>` where <name> is the name of the branch.
 
 To delete a branch:
-    1. To delete a local branch write `git branch -d <name>` where <name> is the name of the branch.
-    1. To delete a remote branch (be careful!) write `git push origin --delete <name>` where <name> is the name of the branch.
+   1. To delete a local branch write `git branch -d <name>` where <name> is the name of the branch.
+   1. To delete a remote branch (be careful!) write `git push origin --delete <name>` where <name> is the name of the branch.
 
 In general it is better to commit as often as possible. Make sure what you have works and doesn't break anything else, and then commit that shit. Doesn't matter if it's a single line or a corrected punctuation mark in a comment. Commits are not precious. That way you never change too many files at a time or give others the time to do the same, reducing the need to merge files. It also makes it easier to write good commit messages :)
