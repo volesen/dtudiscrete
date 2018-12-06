@@ -61,7 +61,7 @@ To push (upload) your changes to the current branch:
     1. Before anything else, make sure to pull the current branch with `git pull`. This helps in dealing with merge conflicts
     2. `git add .` to add all your changed, deleted and added files to the "staging area".
     3. `git commit -m "<message>"` to create a "commit" with all your changes. This only changes things in your local repository. <message> should be a short description of what your commit changes. [A great guide to writing good messages](https://chris.beams.io/posts/git-commit/).
-    4. `git push` to push your newly created commit to the branch. This is the first time any changes are made outside of your computer. [branch](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging).
+    4. `git push` to push your newly created commit to the branch. This is the first time any changes are made outside of your computer. [branch](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging). If it is a new branch write `git push --set-upstream origin <name>` where <name> is the name of the branch.
     5. Aaand your done.
 
 To swap branch (if you want to work at multiple branches simultaneously):
