@@ -1,4 +1,4 @@
-from extended_euclidean import egcd
+from dtudiscrete.extended_euclidean import egcd
 from tabulate import tabulate
 
 def get_explanation(table, k):
