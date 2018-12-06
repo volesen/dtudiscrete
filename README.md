@@ -13,15 +13,12 @@ To run the examples:
 	* Make sure you're using the Python 3.6+ version of virtualenv. `python3 -m virtualenv venv` might also do the trick.
 
 1. Install dependencies.
-	* With an active virtualenv, `pip install -r requirements.txt`.
+	* With an active virtualenv, `pip install -e dtudiscrete`.
 
 2. Enjoy!
-	* GCF: Currently, enter `dtudiscrete` and run `./cli.py <a> <b>`, replacing a and b with integers,
-	to get the GCF.
-    * You may need to run `python` instead of `./`. Make sure your virtualenv is active if you do so.
-
+    	* Make sure your virtualenv is active and do 'dtudiscrete COMMAND'
 3. Test!
-	* All tests are easily run using `python -m pytest Tests/*`.
+	* All tests are easily run using `pytest dtudiscrete/tests/`.
 
 ## Documentation
 To build the documentation (including auto-generated from `__doc__`s), do the following:
