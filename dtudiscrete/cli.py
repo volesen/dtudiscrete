@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import click
-from dtudiscrete.pretty_print import pretty_print_table
+from pretty_print import pretty_print_table
+from dtudiscrete.least_multiple import lcm
 
 
 @click.command()
@@ -9,6 +10,7 @@ from dtudiscrete.pretty_print import pretty_print_table
 @click.option('--use-latex', is_flag = True)
 def egcd(a, b, use_latex):
     click.echo(pretty_print_table(a, b, "latex" if use_latex else "plain"))
+    click.echo('\n' + lcm(a, b))
 
 
 # Execute CLI

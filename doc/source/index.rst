@@ -43,6 +43,16 @@ Extended Euclidean
 
 
 
+Least Common Multiple
+----------------------------
+
+.. automodule:: dtudiscrete.least_multiple
+	:members:
+	:undoc-members:
+	:show-inheritance:
+
+
+
 Inverse
 ----------------------------
 
