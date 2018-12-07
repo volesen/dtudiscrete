@@ -21,7 +21,7 @@ To run the examples:
     * You may need to run `python` instead of `./`. Make sure your virtualenv is active if you do so.
 
 3. Test!
-	* All tests are easily run using `python -m pytest Tests/*`.
+	* All tests are easily run using `python -m pytest tests`.
 
 ## Documentation
 To build the documentation (including auto-generated from `__doc__`s), do the following:

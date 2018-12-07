@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 import click
-from pretty_print import pretty_print_table
-from least_multiple import lcm
+from .pretty_print import pretty_print_table
+from .least_multiple import lcm
 
 
-@click.command()
+@click.group()
+def cli():
+	pass
+
+@cli.command()
 @click.argument('a', type=int)
 @click.argument('b', type=int)
 @click.option('--use-latex', is_flag = True)

@@ -1,6 +1,6 @@
 from math import gcd
-from extended_euclidean import egcd
-from inverse import inverse_mod
+from .extended_euclidean import egcd
+from .inverse import inverse_mod
 
 # TODO: Notes use egcd(n, a) which switches s, t. Fix consistency
 

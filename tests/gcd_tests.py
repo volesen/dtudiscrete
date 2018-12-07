@@ -2,7 +2,7 @@ import pytest
 from math import gcd
 from random import randint
 
-from ..extended_euclidean import egcd
+from dtudiscrete.extended_euclidean import egcd
 
 max_int = 2**16
 

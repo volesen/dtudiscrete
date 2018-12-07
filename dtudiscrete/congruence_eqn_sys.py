@@ -1,5 +1,5 @@
 from math import gcd
-from extended_euclidean import egcd
+from .extended_euclidean import egcd
 
 # TODO: Notes use egcd(n, a) which switches s, t. Fix consistency
 

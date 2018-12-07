@@ -1,8 +1,7 @@
 import pytest
 from random import randint
 
-
-from polynomials import Polynomial
+from dtudiscrete.polynomials import Polynomial
 
 
 def random_polynomial(min_int, max_int, degree):
