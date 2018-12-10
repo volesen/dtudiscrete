@@ -23,7 +23,8 @@
 ## - forall
 ## - foreach
 ## - easier input
-## - prettier output
+## - even prettier output
+## - less parantheses in the output
 ##
 ##################################################################
 
@@ -47,11 +48,45 @@ class tableau_state(object):
     def get(self, var_name):
         return getattr(self, var_name)
     
+#    def __str__(self):
+#        # create printing string
+#        s = 'Expressions:\n'
+#        for expression in self.get('expressions'):
+#            s += f'    {expression.to_str(True)}\n'
+#        
+#        if self.get('closed'):
+#            s += f'    \u00D7'
+#            
+#        elif self.get('saturated'):
+#            s += f'    \u25EF'
+#            
+#        elif self.get('branched_states') != set():
+#            # convert certain words to unicode symbols
+#            switch_dir = {
+#                'negation': '\u00AC',
+#                'disjunction': '\u2228',
+#                'conjunction': '\u2227',
+#                'implication': '\u2192',
+#                'biimplication': '\u2194'
+#                }
+#            
+#            rule_used_print = switch_dir.get(self.get('rule_used')[0])
+#            
+#            # continue printing string
+#            s += f"Branches using rule '{rule_used_print}:{'T' if self.rule_used[1] else 'F'}':\n"
+#            for branch in self.get('branched_states'):
+#                sb = str(branch)
+#                for line in sb.splitlines():
+#                    s += f'    {line}\n'
+#        
+#        return s
+    
     def __str__(self):
         # create printing string
-        s = 'Expressions:\n'
+        s = ''
+#        s = 'Expressions:\n'
         for expression in self.get('expressions'):
-            s += f'    {expression.to_str(True)}\n'
+            s += f'{expression.to_str(True)}\n'
         
         if self.get('closed'):
             s += f'    \u00D7'
@@ -72,11 +107,21 @@ class tableau_state(object):
             rule_used_print = switch_dir.get(self.get('rule_used')[0])
             
             # continue printing string
-            s += f"Branches using rule '{rule_used_print}:{'T' if self.rule_used[1] else 'F'}':\n"
-            for branch in self.get('branched_states'):
+            s += f"    |\n"
+            s += f"    |\n"
+            s += f"   {rule_used_print}:{'T' if self.rule_used[1] else 'F'}\n"
+            s += f"    |\n"
+            for i, branch in enumerate(self.get('branched_states')):
                 sb = str(branch)
-                for line in sb.splitlines():
-                    s += f'    {line}\n'
+                s += f'    |--- {sb.splitlines()[0]}\n'
+                for line in sb.splitlines()[1:]:
+                    # cleanup some of the extra lines
+                    if len(self.get('branched_states'))-1 > i:
+                        s += f'    |    {line}\n'
+                    else: # without the extra line
+                        s += f'         {line}\n'
+                if len(self.get('branched_states'))-1 > i:
+                    s += '    |\n'
         
         return s
     
@@ -363,3 +408,14 @@ class biimplication(expression):
                 return f"({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()})"
             else:
                 return f"\u00AC({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()})"
+
+c = constant
+n = negation
+d = disjunction
+co = conjunction
+i = implication
+bi = biimplication
+
+print(tableau_state({i((d((i((c('p'),c('r'))),i((c('q'),c('r'))))),i((d((c('p'),c('q'))),c('r')))), False)}))
+#print(tableau_state({implication((implication((disjunction((implication((constant('p'), constant('r'))), implication((constant('q'), constant('r'))))), disjunction((constant('p'), constant('q'))))), constant('r')), False)}))
+#print(tableau_state({biimplication((constant('A'), conjunction((conjunction((constant('B'), negation(constant('B')))), negation(constant('A'))))), True), disjunction((constant('A'), constant('B')), True)}))
