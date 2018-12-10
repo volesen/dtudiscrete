@@ -51,15 +51,15 @@ class tableau_state(object):
             
         elif self.get('branched_states') != set():
             # convert certain words to unicode symbols
-            if self.rule_used[0] == 'negation':
-                rule_used_print = '\u00AC'
-
-            if self.rule_used[0] == 'disjunction':
-                rule_used_print = '\u2228'
-
-            if self.rule_used[0] == 'conjunction':
-                rule_used_print = '\u2227'
-            # TODO:\\ add other symbols for printing
+            switch_dir = {
+                'negation': '\u00AC',
+                'disjunction': '\u2228',
+                'conjunction': '\u2227',
+                'implication': '\u2192',
+                'biimplication': '\u2194'
+                }
+            
+            rule_used_print = switch_dir.get(self.get('rule_used')[0])
             
             # continue printing string
             s += f"Branches using rule '{rule_used_print}:{'T' if self.rule_used[1] else 'F'}':\n"
@@ -281,15 +281,79 @@ class conjunction(expression):
 
     def to_str(self, show_true_or_false=False):
         if show_true_or_false:
-            return f"{self.get('variable')[0].to_str()}\u2227{self.get('variable')[1].to_str()}:{self.true_or_false_to_str()}"
+            return f"({self.get('variable')[0].to_str()})\u2227({self.get('variable')[1].to_str()}):{self.true_or_false_to_str()}"
         else:
             if self.get('true_or_false'):
                 return f"({self.get('variable')[0].to_str()})\u2227({self.get('variable')[1].to_str()})"
             else:
                 return f"\u00AC({self.get('variable')[0].to_str()})\u2228\u00AC({self.get('variable')[1].to_str()})"
 
-#class implication(expression):
-#class biimplication(expression):
+class implication(expression):
+    
+    # implication takes a tuple of 2 expressions as 'expr'. None of the other classes care about this BUT all classes that create an implication has to remember to give it two expressions in 'expr'.
+    def __init__(self, expr, true_or_false=True):
+        super().__init__(expr, true_or_false)
+        
+    def decompose(self):
+        if self.get('true_or_false'):
+            # return two branches of an expression (one of the variables of the disjunction) where the first branch is where the left expression is false, and the second branch is where the right expression is true
+            inside_class0 = self.get('variable')[0].__class__
+            inside_class_content0 = self.get('variable')[0].get('variable')
+            inside_class1 = self.get('variable')[1].__class__
+            inside_class_content1 = self.get('variable')[1].get('variable')
+            true_or_false = (False, True)
+            return ((inside_class0(inside_class_content0, true_or_false[0]),),(inside_class1(inside_class_content1, true_or_false[1]),))
+        else:
+            # return one branch of two expressions (the variables of the implication). the left expression is true and the right expression is false
+            inside_class0 = self.get('variable')[0].__class__
+            inside_class_content0 = self.get('variable')[0].get('variable')
+            inside_class1 = self.get('variable')[1].__class__
+            inside_class_content1 = self.get('variable')[1].get('variable')
+            true_or_false = (True, False)
+            return ((inside_class0(inside_class_content0, true_or_false[0]),inside_class1(inside_class_content1, true_or_false[1])),)
+
+    def to_str(self, show_true_or_false=False):
+        if show_true_or_false:
+            return f"({self.get('variable')[0].to_str()})\u2192({self.get('variable')[1].to_str()}):{self.true_or_false_to_str()}"
+        else:
+            if self.get('true_or_false'):
+                return f"({self.get('variable')[0].to_str()})\u2192({self.get('variable')[1].to_str()})"
+            else:
+                return f"\u00AC({self.get('variable')[0].to_str()})\u2228(({self.get('variable')[0].to_str()})\u2227({self.get('variable')[1].to_str()}))"
+
+class biimplication(expression):
+    
+    # biimplication takes a tuple of 2 expressions as 'expr'. None of the other classes care about this BUT all classes that create a biimplication has to remember to give it two expressions in 'expr'.
+    def __init__(self, expr, true_or_false=True):
+        super().__init__(expr, true_or_false)
+        
+    def decompose(self):
+        if self.get('true_or_false'):
+            # return two branches where the first branch is where both expressions are true, and the second branch is where both expressions are false
+            inside_class0 = self.get('variable')[0].__class__
+            inside_class_content0 = self.get('variable')[0].get('variable')
+            inside_class1 = self.get('variable')[1].__class__
+            inside_class_content1 = self.get('variable')[1].get('variable')
+            true_or_false = (True, False)
+            return ((inside_class0(inside_class_content0, true_or_false[0]),inside_class1(inside_class_content1, true_or_false[0])),(inside_class0(inside_class_content0, true_or_false[1]),inside_class1(inside_class_content1, true_or_false[1])))
+        else:
+            # return two branches where the first branch is where one expression is true and the other is false, and the second branch is where the true/false of the first branch has been swapped
+            inside_class0 = self.get('variable')[0].__class__
+            inside_class_content0 = self.get('variable')[0].get('variable')
+            inside_class1 = self.get('variable')[1].__class__
+            inside_class_content1 = self.get('variable')[1].get('variable')
+            true_or_false = (True, False)
+            return ((inside_class0(inside_class_content0, true_or_false[0]),inside_class1(inside_class_content1, true_or_false[1])),(inside_class0(inside_class_content0, true_or_false[1]),inside_class1(inside_class_content1, true_or_false[0])))
+
+    def to_str(self, show_true_or_false=False):
+        if show_true_or_false:
+            return f"({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()}):{self.true_or_false_to_str()}"
+        else:
+            if self.get('true_or_false'):
+                return f"({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()})"
+            else:
+                return f"\u00AC({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()})"
+
 #class forall(expression):
 #class foreach(expression):
 
@@ -455,6 +519,106 @@ def test():
     assert d[1][0].to_str(True) == 'B:F'
     
     
+    # True implication of constants test
+    a = constant('A')
+    b = constant('B')
+    c = implication((a,b), True)
+    # To string
+    assert str(c) == c.to_str() in ('A\u2192B', '(A)\u2192(B)')
+    # To string, don't show true or false
+    assert c.to_str(False) in ('A\u2192B', '(A)\u2192(B)')
+    # To string, show true or false
+    assert c.to_str(True) in ('A\u2912B:T', '(A)\u2192(B):T')
+    d = c.decompose()
+    # To string (after decompose)
+    assert str(d[0][0]) == d[0][0].to_str() in ('\u00ACA', '\u00AC(A)')
+    assert str(d[1][0]) == d[1][0].to_str() == 'B'
+    # To string, don't show true or false (after decompose)
+    assert d[0][0].to_str(False) in ('\u00ACA', '\u00AC(A)')
+    assert d[1][0].to_str(False) == 'B'
+    # To string, show true or false (after decompose)
+    assert d[0][0].to_str(True) == 'A:F'
+    assert d[1][0].to_str(True) == 'B:T'
+    
+    
+    # False implication of constants test
+    a = constant('A')
+    b = constant('B')
+    c = implication((a,b), False)
+    # To string
+    assert str(c) == c.to_str() in ('\u00ACA\u2228(A\u2227B)', '\u00AC(A)\u2228((A)\u2227(B))')
+    # To string, don't show true or false
+    assert c.to_str(False) in ('\u00ACA\u2228(A\u2227B)', '\u00AC(A)\u2228((A)\u2227(B))')
+    # To string, show true or false
+    assert c.to_str(True) in ('A\u2192B:F', '(A)\u2192(B):F')
+    d = c.decompose()
+    # To string (after decompose)
+    assert str(d[0][0]) == d[0][0].to_str() in ('A', '(A)')
+    assert str(d[0][1]) == d[0][1].to_str() in ('\u00ACB', '\u00AC(B)')
+    # To string, don't show true or false (after decompose)
+    assert d[0][0].to_str(False) in ('A', '(A)')
+    assert d[0][1].to_str(False) in ('\u00ACB', '\u00AC(B)')
+    # To string, show true or false (after decompose)
+    assert d[0][0].to_str(True) == 'A:T'
+    assert d[0][1].to_str(True) == 'B:F'
+    
+    
+    # True biimplication of constants test
+    a = constant('A')
+    b = constant('B')
+    c = biimplication((a,b), True)
+    # To string
+    assert str(c) == c.to_str() in ('A\u2194B', '(A)\u2194(B)')
+    # To string, don't show true or false
+    assert c.to_str(False) in ('A\u2194B', '(A)\u2194(B)')
+    # To string, show true or false
+    assert c.to_str(True) in ('A\u2914B:T', '(A)\u2194(B):T')
+    d = c.decompose()
+    # To string (after decompose)
+    assert str(d[0][0]) == d[0][0].to_str() == 'A'
+    assert str(d[0][1]) == d[0][1].to_str() == 'B'
+    assert str(d[1][0]) == d[1][0].to_str() in ('\u00ACA', '\u00AC(A)')
+    assert str(d[1][1]) == d[1][1].to_str() in ('\u00ACB', '\u00AC(B)')
+    # To string, don't show true or false (after decompose)
+    assert d[0][0].to_str(False) == 'A'
+    assert d[0][1].to_str(False) == 'B'
+    assert d[1][0].to_str(False) in ('\u00ACA', '\u00AC(A)')
+    assert d[1][1].to_str(False) in ('\u00ACB', '\u00AC(B)')
+    # To string, show true or false (after decompose)
+    assert d[0][0].to_str(True) == 'A:T'
+    assert d[0][1].to_str(True) == 'B:T'
+    assert d[1][0].to_str(True) == 'A:F'
+    assert d[1][1].to_str(True) == 'B:F'
+    
+    
+    # False biimplication of constants test
+    a = constant('A')
+    b = constant('B')
+    c = biimplication((a,b), False)
+    # To string
+    assert str(c) == c.to_str() in ('\u00ACA\u2194B', '\u00AC(A)\u2194(B)')
+    # To string, don't show true or false
+    assert c.to_str(False) in ('\u00ACA\u2194B', '\u00AC(A)\u2194(B)')
+    # To string, show true or false
+    assert c.to_str(True) in ('A\u2914B:F', '(A)\u2194(B):F')
+    d = c.decompose()
+    # To string (after decompose)
+    assert str(d[0][0]) == d[0][0].to_str() == 'A'
+    assert str(d[0][1]) == d[0][1].to_str() in ('\u00ACB', '\u00AC(B)')
+    assert str(d[1][0]) == d[1][0].to_str() in ('\u00ACA', '\u00AC(A)')
+    assert str(d[1][1]) == d[1][1].to_str() == 'B'
+    # To string, don't show true or false (after decompose)
+    assert d[0][0].to_str(False) == 'A'
+    assert d[0][1].to_str(False) in ('\u00ACB', '\u00AC(B)')
+    assert d[1][0].to_str(False) in ('\u00ACA', '\u00AC(A)')
+    assert d[1][1].to_str(False) == 'B'
+    # To string, show true or false (after decompose)
+    assert d[0][0].to_str(True) == 'A:T'
+    assert d[0][1].to_str(True) == 'B:F'
+    assert d[1][0].to_str(True) == 'A:F'
+    assert d[1][1].to_str(True) == 'B:T'
+    
+    
 #    print({constant('A')})
 #    print(tableau_state({constant('A')}))
 #    print(tableau_state({constant('A', False)}))
@@ -471,6 +635,12 @@ def test():
 #    print(tableau_state({disjunction((negation(constant('A')), negation(constant('B'))), True)}))
 #    print(tableau_state({conjunction((conjunction((constant('A'), negation(constant('B')))), constant('B')), True)}))
 #    print(tableau_state({disjunction((negation(constant('A')), negation(constant('B'))), True)}))
+#    print(tableau_state({implication((constant('A'), constant('B')), True)}))
+#    print(tableau_state({implication((constant('A'), constant('B')), False)}))
+#    print(tableau_state({implication((constant('A'), conjunction((conjunction((constant('B'), negation(constant('B')))), negation(constant('A'))))), True)}))
+#    print(tableau_state({biimplication((constant('A'), constant('B')), True)}))
+#    print(tableau_state({biimplication((constant('A'), constant('B')), False)}))
+#    print(tableau_state({biimplication((constant('A'), conjunction((conjunction((constant('B'), negation(constant('B')))), negation(constant('A'))))), True)}))
 #    print(disjunction((constant('A'), constant('B')), True).to_str(True))
 #    print(disjunction((constant('A'), constant('B')), True))
 #    print(disjunction((constant('A'), constant('B')), False).to_str(True))
