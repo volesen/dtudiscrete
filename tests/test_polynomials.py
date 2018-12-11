@@ -32,5 +32,3 @@ def test_polynomial_division(a, b, quo, mod):
     calc_quo, calc_mod = a.divide(b)
     assert calc_quo == quo
     assert calc_mod == mod
-
-

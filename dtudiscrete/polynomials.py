@@ -94,6 +94,12 @@ class Polynomial:
                 return False
         return True
 
+    def __ne__(self, pol):
+        for i in range(0, max(self.degree, pol.degree)):
+            if self[i] != pol[i]:
+                return True
+        return False
+
     def __str__(self):
         result = ''
         for exponent, coef in self._coefs.items():
