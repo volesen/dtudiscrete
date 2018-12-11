@@ -1,7 +1,21 @@
 ##################################################################
 ##
 ## How to use:
-## - create an expression by stacking the following expressions:
+## 1. create an expression as a string where
+##  
+##   - '!': negation
+##   - 'v': disjunction
+##   - '^': conjunction
+##   - '->': implication
+##   - '<->': biimplication
+##   - ',': new expression
+##
+## 2. print the tableau.
+##    - Example: print(create_tableau('((p -> r)v (q -> r))->((p v q)->r):F'))
+##
+##
+## How to use (old):
+## 1. create an expression by chaining the following expressions:
 ##
 ##   - constant(<name>, True/False)
 ##   - negation(expr, True/False)
@@ -10,10 +24,10 @@
 ##   - implication((expr1, expr2), True/False)
 ##   - biimplication((expr1, expr2), True/False)
 ##
-## - stack a set of expressions inside a tableau_state
-## - print the result
+## 2. stack a set of expressions inside a tableau_state
+## 3. print the result
 ##
-## Example:
+## Old example:
 ##  - print(tableau_state({disjunction((negation(constant('A')), negation(constant('B'))), True)}))
 ##
 ## KNOWN BUGS:
@@ -549,7 +563,7 @@ class string_to_expression(object):
             return expression
 
 def create_tableau(string: str):
-    # '!' -> negation
+    # '!': negation
     # 'v': disjunction
     # '^': conjunction
     # '->': implication
