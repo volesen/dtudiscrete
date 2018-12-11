@@ -1,5 +1,6 @@
 from math import gcd
 from .extended_euclidean import egcd
+from .pretty_print import pretty_print_table
 
 # TODO: Notes use egcd(n, a) which switches s, t. Fix consistency
 
@@ -7,6 +8,7 @@ def chinese_remainder(b1, b2, n1, n2, steps = True, explanation = ''):
     '''
         This function solves for the chinese remainder (TODO: Equation).
     '''
+    explanation += pretty_print_table(n1, n2) + '\n'
 
     if gcd(n1, n2) != 1:
         explanation += 'As gcd(n1, n2) =/= 1, this cannot be solved the "Chinese Remainder Theorem"'
