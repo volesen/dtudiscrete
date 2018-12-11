@@ -6,7 +6,7 @@ def get_explanation(table, k):
     r1= table[k-1][1]
     r2 = table[k-2][1]
 
-    return f'Da {r2} = {r2//r1}*{r1} + {r}'
+    return f'Da {r2} = ({r2//r1})*({r1}) + {r}'
 
 
 def pretty_print_table(a,b,tablefmt="plain"):
