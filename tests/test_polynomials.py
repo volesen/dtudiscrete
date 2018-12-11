@@ -1,6 +1,5 @@
 import pytest
 from random import randint
-
 from dtudiscrete.polynomials import Polynomial
 
 
