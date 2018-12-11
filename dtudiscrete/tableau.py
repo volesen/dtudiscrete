@@ -22,7 +22,6 @@
 ## TODO:\\
 ## - forall
 ## - foreach
-## - easier input
 ## - even prettier output
 ## - less parantheses in the output
 ##
@@ -84,7 +83,6 @@ class tableau_state(object):
     def __str__(self):
         # create printing string
         s = ''
-#        s = 'Expressions:\n'
         for expression in self.get('expressions'):
             s += f'{expression.to_str(True)}\n'
         
@@ -409,13 +407,174 @@ class biimplication(expression):
             else:
                 return f"\u00AC({self.get('variable')[0].to_str()})\u2194({self.get('variable')[1].to_str()})"
 
-c = constant
-n = negation
-d = disjunction
-co = conjunction
-i = implication
-bi = biimplication
 
-print(tableau_state({i((d((i((c('p'),c('r'))),i((c('q'),c('r'))))),i((d((c('p'),c('q'))),c('r')))), False)}))
-#print(tableau_state({implication((implication((disjunction((implication((constant('p'), constant('r'))), implication((constant('q'), constant('r'))))), disjunction((constant('p'), constant('q'))))), constant('r')), False)}))
-#print(tableau_state({biimplication((constant('A'), conjunction((conjunction((constant('B'), negation(constant('B')))), negation(constant('A'))))), True), disjunction((constant('A'), constant('B')), True)}))
+##########################################################################
+##
+## From here on the tableau solver is completed, so what follows is an easier input method
+##
+##########################################################################
+
+import re
+
+def find_surrounding_paranteses(string: str, index: int):
+    # find an eventual unpaired start paranthesis (if '<-' is in a paranthesis)
+    left_par_loc = _find_left_paired_paranthesis(string[:index-1])
+    # if an unpaired paranthesis has been found
+    if not left_par_loc == None:
+        right_par_loc = _find_right_paired_paranthesis(string[index+1:])
+        count = 0
+        for i, char in enumerate(string[index+1:]):
+            if char == '(':
+                count += 1
+            elif char == ')':
+                count -= 1
+            # if an unpaired paranthesis has been found
+            if count < 0:
+                right_par_loc = index + (i + 1)
+                break
+        return (left_par_loc, right_par_loc)
+    else:
+        # if there is no surrounding paranteses
+        return None
+
+def _find_left_paired_paranthesis(string: str):
+    left_par_loc = None
+    count = 0
+    for i, char in enumerate(string[::-1]):
+        if char == ')':
+            count += 1
+        elif char == '(':
+            count -= 1
+        # if an unpaired paranthesis has been found
+        if count < 0:
+            left_par_loc = len(string) - (i + 1)
+            break
+    return left_par_loc
+
+def _find_right_paired_paranthesis(string: str):
+    right_par_loc = None
+    count = 0
+    for i, char in enumerate(string):
+        if char == '(':
+            count += 1
+        elif char == ')':
+            count -= 1
+        # if an unpaired paranthesis has been found
+        if count < 0:
+            right_par_loc = i
+            break
+    return right_par_loc
+
+class string_to_expression(object):
+    def __init__(self, string):
+        self.string = string
+        self.string = self._strip_parantheses(self.get('string'))
+        self.true_or_false, self.string = self._find_true_or_false(self.get('string'))
+        self.string = self._strip_parantheses(self.get('string'))
+        self.main_connective = self._find_main_connective(self.get('string'))
+        self.expression = self._to_expression(self.get('string'), self.get('main_connective'))
+    
+    def get(self, attr_name):
+        return getattr(self, attr_name)
+    
+    def _strip_parantheses(self, string):
+        # check if there is a paranthesis surrounding everything. if there is, remove it
+        while(True):
+            if string[0] == '(' and _find_right_paired_paranthesis(string[1:]) == len(string)-2:
+                string = string[1:-1]
+            else:
+                break
+        
+        return string
+
+    def _find_true_or_false(self, string):
+        # check if there is a true/false value attached
+        if string[-2:] == ':T':
+            true_or_false = True
+            string = string[:-2]
+        elif string[-2:] == ':F':
+            true_or_false = False
+            string = string[:-2]
+        else: # assume true
+            true_or_false = True
+        return true_or_false, string
+    
+    def _find_main_connective(self, string):
+        prioritation = [('\<\-\>', 'biimplication'), ('\-\>', 'implication'), ('\^', 'conjunction'), ('v', 'disjunction'), ('\!', 'negation')]
+        main_connective = None
+        for con in prioritation:
+            biimplications = [(m.start(), m.end()) for m in re.finditer(con[0], string)]
+            for bi in biimplications:
+                sur_par = find_surrounding_paranteses(string, bi[0]+1)
+                if sur_par == None:
+                    main_connective = (con[1], bi)
+                    return main_connective
+        
+        return ('constant', (0, len(string)))
+    
+    def _to_expression(self, string, main_connective):
+        if main_connective[0] == 'constant':
+            expression = constant(string, self.get('true_or_false'))
+            return expression
+        else:
+            # get the expression(s) that are modified by the main connective
+            before_string = string[0:main_connective[1][0]]
+            after_string = string[main_connective[1][1]:]
+            if before_string:
+                before_expression = string_to_expression(before_string).get('expression')
+            if after_string:
+                after_expression = string_to_expression(after_string).get('expression')
+            
+            # create the main_connective expression
+            if main_connective[0] == 'negation':
+                if before_expression:
+                    raise AttributeError("There shouldn't be anything before the negation, but there was. This seems to because of a bad input")
+                expression = negation(after_expression, self.get('true_or_false'))
+            
+            elif main_connective[0] == 'disjunction':
+                expression = disjunction((before_expression, after_expression), self.get('true_or_false'))
+            
+            elif main_connective[0] == 'conjunction':
+                expression = conjunction((before_expression, after_expression), self.get('true_or_false'))
+            
+            elif main_connective[0] == 'implication':
+                expression = implication((before_expression, after_expression), self.get('true_or_false'))
+            
+            elif main_connective[0] == 'biimplication':
+                expression = biimplication((before_expression, after_expression), self.get('true_or_false'))
+            
+            else:
+                raise ValueError('The main connective is unknown. How could that be? Constant is the default case for unknowns.')
+            
+            return expression
+
+def create_tableau(string: str):
+    # '!' -> negation
+    # 'v': disjunction
+    # '^': conjunction
+    # '->': implication
+    # '<->': biimplication
+    # ',': new expression
+
+    # remove all whitespaces
+    string = string.replace(' ', '')
+
+    # find all ',' and split the expressions up
+    expression_strings = set()
+    commas = [m.start() for m in re.finditer(',', string)]
+    oi = 0
+    if commas:
+        for i in commas:
+            expression_strings.add(string[oi:i])
+            oi = i+1
+    else:
+        expression_strings.add(string)
+    
+    # convert the strings to expressions
+    expressions = set()
+    
+    for expression_string in expression_strings:
+        expressions.add(string_to_expression(expression_string).get('expression'))
+    
+    # create the tableau of the expressions
+    return tableau_state(expressions)
