@@ -1,3 +1,9 @@
+"""
+
+Functions relates to solving tableaus.
+
+"""
+
 ##################################################################
 ##
 ## How to use:
@@ -431,55 +437,6 @@ class biimplication(expression):
 
 import re
 
-def find_surrounding_paranteses(string: str, index: int):
-    # find an eventual unpaired start paranthesis (if '<-' is in a paranthesis)
-    left_par_loc = _find_left_paired_paranthesis(string[:index-1])
-    # if an unpaired paranthesis has been found
-    if not left_par_loc == None:
-        right_par_loc = _find_right_paired_paranthesis(string[index+1:])
-        count = 0
-        for i, char in enumerate(string[index+1:]):
-            if char == '(':
-                count += 1
-            elif char == ')':
-                count -= 1
-            # if an unpaired paranthesis has been found
-            if count < 0:
-                right_par_loc = index + (i + 1)
-                break
-        return (left_par_loc, right_par_loc)
-    else:
-        # if there is no surrounding paranteses
-        return None
-
-def _find_left_paired_paranthesis(string: str):
-    left_par_loc = None
-    count = 0
-    for i, char in enumerate(string[::-1]):
-        if char == ')':
-            count += 1
-        elif char == '(':
-            count -= 1
-        # if an unpaired paranthesis has been found
-        if count < 0:
-            left_par_loc = len(string) - (i + 1)
-            break
-    return left_par_loc
-
-def _find_right_paired_paranthesis(string: str):
-    right_par_loc = None
-    count = 0
-    for i, char in enumerate(string):
-        if char == '(':
-            count += 1
-        elif char == ')':
-            count -= 1
-        # if an unpaired paranthesis has been found
-        if count < 0:
-            right_par_loc = i
-            break
-    return right_par_loc
-
 class string_to_expression(object):
     def __init__(self, string):
         self.string = string
@@ -520,7 +477,7 @@ class string_to_expression(object):
         for con in prioritation:
             biimplications = [(m.start(), m.end()) for m in re.finditer(con[0], string)]
             for bi in biimplications:
-                sur_par = find_surrounding_paranteses(string, bi[0]+1)
+                sur_par = self._find_surrounding_paranteses(string, bi[0]+1)
                 if sur_par == None:
                     main_connective = (con[1], bi)
                     return main_connective
@@ -535,6 +492,7 @@ class string_to_expression(object):
             # get the expression(s) that are modified by the main connective
             before_string = string[0:main_connective[1][0]]
             after_string = string[main_connective[1][1]:]
+            before_expression = after_expression = None # placeholder
             if before_string:
                 before_expression = string_to_expression(before_string).get('expression')
             if after_string:
@@ -562,8 +520,78 @@ class string_to_expression(object):
                 raise ValueError('The main connective is unknown. How could that be? Constant is the default case for unknowns.')
             
             return expression
+    
+    def _find_surrounding_paranteses(self, string: str, index: int):
+        # find an eventual unpaired start paranthesis (if '<-' is in a paranthesis)
+        left_par_loc = self._find_left_paired_paranthesis(string[:index-1])
+        # if an unpaired paranthesis has been found
+        if not left_par_loc == None:
+            right_par_loc = self._find_right_paired_paranthesis(string[index+1:])
+            count = 0
+            for i, char in enumerate(string[index+1:]):
+                if char == '(':
+                    count += 1
+                elif char == ')':
+                    count -= 1
+                # if an unpaired paranthesis has been found
+                if count < 0:
+                    right_par_loc = index + (i + 1)
+                    break
+            return (left_par_loc, right_par_loc)
+        else:
+            # if there is no surrounding paranteses
+            return None
+
+    def _find_left_paired_paranthesis(self, string: str):
+        left_par_loc = None
+        count = 0
+        for i, char in enumerate(string[::-1]):
+            if char == ')':
+                count += 1
+            elif char == '(':
+                count -= 1
+            # if an unpaired paranthesis has been found
+            if count < 0:
+                left_par_loc = len(string) - (i + 1)
+                break
+        return left_par_loc
+
+    def _find_right_paired_paranthesis(self, string: str):
+        right_par_loc = None
+        count = 0
+        for i, char in enumerate(string):
+            if char == '(':
+                count += 1
+            elif char == ')':
+                count -= 1
+            # if an unpaired paranthesis has been found
+            if count < 0:
+                right_par_loc = i
+                break
+        return right_par_loc
 
 def create_tableau(string: str):
+    """
+        Generates a printable string with the tableau solution to a logic problem.
+        
+        The current input considers everything except parentheses and the following specific characters as variables.
+        
+        !: negation. Use: !a
+        v: disjunction. Use: a v b
+        ^: conjunction. Use: a ^ b
+        ->: implication. Use: a -> b
+        <->: biimplication. Use: a <-> b
+        ,: new expression, for if the input is a set of expressions. Use: a <-> b , !a
+        
+        All unnecessary parentheses and all spaces are removed automatically, so feel free to insert them for readability.
+        
+        :param str string: The expression(s) that the tableau is going to solve.
+        
+        :return: The tableau as a formatted string, ready to print.
+        
+        :rtype: str
+    """
+    
     # '!': negation
     # 'v': disjunction
     # '^': conjunction

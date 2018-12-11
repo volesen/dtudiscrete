@@ -82,6 +82,17 @@ Pretty Print
 	:show-inheritance:
 
 
+
+Tableau
+----------------------------
+
+.. automodule:: dtudiscrete.tableau
+	:members:
+	:undoc-members:
+	:show-inheritance:
+
+
+
 Indices and tables
 ==================
 
