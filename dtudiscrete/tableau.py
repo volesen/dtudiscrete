@@ -121,11 +121,12 @@ class tableau_state(object):
             # continue printing string
             s += f"    |\n"
             s += f"    |\n"
-            s += f"   {rule_used_print}:{'T' if self.rule_used[1] else 'F'}\n"
+            s += f"   {rule_used_print}:{'T' if self.get('rule_used')[1] else 'F'} on {self.get('rule_used')[2]}\n"
+            s += f"    |\n"
             s += f"    |\n"
             for i, branch in enumerate(self.get('branched_states')):
                 sb = str(branch)
-                s += f'    |--- {sb.splitlines()[0]}\n'
+                s += f'    |___ {sb.splitlines()[0]}\n'
                 for line in sb.splitlines()[1:]:
                     # cleanup some of the extra lines
                     if len(self.get('branched_states'))-1 > i:
@@ -215,7 +216,7 @@ class tableau_state(object):
                         # add the new state to branched_states
                         branches.add(tableau_state(branch_expressions))
                     
-                    return branches, test
+                    return branches, (test[0], test[1], expression)
         
         raise ValueError("If the _branch_off function is called there should ALWAYS be a possible branch - but none has been found")
 
