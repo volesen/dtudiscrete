@@ -610,6 +610,7 @@ def create_tableau(string: str):
         for i in commas:
             expression_strings.add(string[oi:i])
             oi = i+1
+        expression_strings.add(string[oi:])
     else:
         expression_strings.add(string)
     
