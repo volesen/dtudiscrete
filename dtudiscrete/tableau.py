@@ -452,7 +452,7 @@ class string_to_expression(object):
     def _strip_parantheses(self, string):
         # check if there is a paranthesis surrounding everything. if there is, remove it
         while(True):
-            if string[0] == '(' and _find_right_paired_paranthesis(string[1:]) == len(string)-2:
+            if string[0] == '(' and self._find_right_paired_paranthesis(string[1:]) == len(string)-2:
                 string = string[1:-1]
             else:
                 break
