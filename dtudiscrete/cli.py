@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
+
+'''
+    The CLI interface for the package.
+    
+    The avabilable commands are as such (see --help for more information):
+        - *egcd*: Calculate the GCD of the two integer inputs.
+        - *ceqn*: Solve the given congruence equation.
+        - *crt*: Solve for the chinese remainder.
+'''
+
 import click
+
 from .pretty_print import pretty_print_table
 from .least_multiple import lcm
 from .congruence_eqn import congruence_eqn
@@ -12,6 +23,7 @@ def cli():
     pass
 
 
+
 @cli.command()
 @click.argument('a', type=int)
 @click.argument('b', type=int)
@@ -20,12 +32,15 @@ def egcd(a, b, use_latex):
     click.echo(pretty_print_table(a, b, "latex" if use_latex else "plain"))
     click.echo('\n' + lcm(a, b))
 
+
+
 @cli.command()
 @click.argument('a', type=int)
 @click.argument('b', type=int)
 @click.argument('n', type=int)
 def ceqn(a, b, n):
     click.echo(congruence_eqn(a, b, n, steps = True).encode('utf-8'))
+
 
 
 @cli.command()
@@ -37,11 +52,14 @@ def crt(a1, a2, n1, n2):
     click.echo(chinese_remainder(a1, a2, n1, n2).encode('utf-8'))
 
 
+
 @cli.command()
 @click.argument('expr', type=str)
 def tableau(expr):
     click.echo(create_tableau(expr))
 
 
+
 if __name__ == '__main__':
+    # If no command is given, assume congruence equation.
     ceqn()

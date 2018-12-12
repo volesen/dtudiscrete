@@ -6,7 +6,7 @@ from .pretty_print import pretty_print_table
 
 def chinese_remainder(b1, b2, n1, n2, steps = True, explanation = ''):
     '''
-        This function solves for the chinese remainder (TODO: Equation).
+        This function solves for the chinese remainder.
     '''
     explanation += pretty_print_table(n1, n2) + '\n'
 
