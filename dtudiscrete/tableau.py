@@ -30,14 +30,14 @@ An example of this procedure follows.
     >>> tableau = create_tableau(logic_exp)
     
     >>> print(tableau)
-        (((p)→(r))∨((q)→(r)))→(((p)∨(q))→(r)):F
+        (((p)→(r))v((q)→(r)))→(((p)v(q))→(r)):F
         |
         |
-       →:F on (((p)→(r))∨((q)→(r)))→(((p)∨(q))→(r)):F
+       →:F on (((p)→(r))v((q)→(r)))→(((p)v(q))→(r)):F
         |
         |
-        |___ ((p)∨(q))→(r):F
-             ((p)→(r))∨((q)→(r)):T
+        |___ ((p)v(q))→(r):F
+             ((p)→(r))v((q)→(r)):T
                  |
                  |
                  ...
