@@ -127,7 +127,7 @@ class tableau_state(object):
             # continue printing string
             s += f"    |\n"
             s += f"    |\n"
-            s += f"   {rule_used_print}:{'T' if self.get('rule_used')[1] else 'F'} on {self.get('rule_used')[2]}\n"
+            s += f"   {rule_used_print}:{'T' if self.get('rule_used')[1] else 'F'} on {self.get('rule_used')[2].to_str(True)}\n"
             s += f"    |\n"
             s += f"    |\n"
             for i, branch in enumerate(self.get('branched_states')):
