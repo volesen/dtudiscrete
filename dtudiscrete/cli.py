@@ -60,13 +60,6 @@ def tableau(expr):
 
 
 
-@cli.command()
-@click.argument('expr', type=str)
-def tableau(expr):
-    click.echo(create_tableau(expr))
-
-
-
 if __name__ == '__main__':
     # If no command is given, assume congruence equation.
     ceqn()
