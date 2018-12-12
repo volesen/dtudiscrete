@@ -4,6 +4,7 @@ from .pretty_print import pretty_print_table
 from .least_multiple import lcm
 from .congruence_eqn import congruence_eqn
 from .congruence_eqn_sys import chinese_remainder
+from .tableau import create_tableau
 
 
 @click.group()
@@ -34,6 +35,12 @@ def ceqn(a, b, n):
 @click.argument('n2', type=int)
 def crt(a1, a2, n1, n2):
     click.echo(chinese_remainder(a1, a2, n1, n2).encode('utf-8'))
+
+
+@cli.command()
+@click.argument('expr', type=str)
+def tableau(expr):
+    click.echo(create_tableau(expr))
 
 
 if __name__ == '__main__':
