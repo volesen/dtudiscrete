@@ -6,6 +6,16 @@ the source files.
 
 
 
+CLI Module
+----------------------------
+
+.. automodule:: dtudiscrete.cli
+	:members:
+	:undoc-members:
+	:show-inheritance:
+
+
+
 Congruence Equation
 ----------------------------
 
