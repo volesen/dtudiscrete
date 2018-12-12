@@ -1,55 +1,78 @@
-"""
+'''
 
-Functions relates to solving tableaus.
+Elements that create semantic tableaus from logical formulae.
 
-"""
+How to Use
+~~~~~~~~~~
+Any non-connective is considered to be a variable.
 
-##################################################################
-##
-## How to use:
-## 1. create an expression as a string where
-##  
-##   - '!': negation
-##   - 'v': disjunction
-##   - '^': conjunction
-##   - '->': implication
-##   - '<->': biimplication
-##   - ',': new expression
-##
-## 2. print the tableau.
-##    - Example: print(create_tableau('((p -> r)v (q -> r))->((p v q)->r):F'))
-##
-##
-## How to use (old):
-## 1. create an expression by chaining the following expressions:
-##
-##   - constant(<name>, True/False)
-##   - negation(expr, True/False)
-##   - disjunction((expr1, expr2), True/False)
-##   - conjunction((expr1, expr2), True/False)
-##   - implication((expr1, expr2), True/False)
-##   - biimplication((expr1, expr2), True/False)
-##
-## 2. stack a set of expressions inside a tableau_state
-## 3. print the result
-##
-## Old example:
-##  - print(tableau_state({disjunction((negation(constant('A')), negation(constant('B'))), True)}))
-##
-## KNOWN BUGS:
-## - it doesn't test/care if you give true/false values to subexpressions (as you shouldn't), so it might act wierd if you do (but you really shouldn't)
-##
-## TODO:\\
-## - forall
-## - foreach
-## - even prettier output
-## - less parantheses in the output
-##
-##################################################################
+1. Create an expression, using the following connectives:
+    - ``!``: Negation (NOT)
+    - ``v``: Disjunction (OR)
+    - ``^``: Conjunction (AND)
+    - ``->``: Implication (IF)
+    - ``<->``: Bi-implication (IFF)
+    - ``,``: New expression
+
+2. Create the tableau using :func:`dtudiscrete.tableau.create_tableau`.
+
+3. Print the tableau.
+
+Example
+~~~~~~~
+
+An example of this procedure follows.
+
+.. code:: python
+    
+    >>> logic_exp = '( (p -> r) v (q -> r) ) -> ( (p v q) -> r ) : F'
+    
+    >>> tableau = create_tableau(logic_exp)
+    
+    >>> print(tableau)
+        (((p)→(r))∨((q)→(r)))→(((p)∨(q))→(r)):F
+        |
+        |
+       →:F on (((p)→(r))∨((q)→(r)))→(((p)∨(q))→(r)):F
+        |
+        |
+        |___ ((p)∨(q))→(r):F
+             ((p)→(r))∨((q)→(r)):T
+                 |
+                 |
+                 ...
+                 ...
+
+Known Bugs/TODO
+~~~~~~~~~~
+Some things don't work quite as they should (yet).
+
+    - It doesn't test/care if you give true/false values to subexpressions (as you shouldn't), so it might act wierd if you do (but you really shouldn't)
+    
+    - ``forall`` is unimplemented.
+    - ``foreach`` is unimplemented.
+    - Output has a lot of redundant parentheses.
+    - Output could be even prettier.
+'''
 
 import itertools
 
+
+
 class tableau_state(object):
+    '''
+        A representation of the state of a tableau.
+        
+        It can be initialized using ``tableau_state(expressions)``,
+        where ``expressions`` is a set of expressions.
+        
+        Class Attributes
+            - expressions: Expressions to calculate.
+            - known_constants: The set of known variables.
+            - variables: The set of variable names.
+            - closed: Boolean triggered if the branch is closed.
+            - saturated: Boolean triggered if the branch is saturated.
+    '''
     
     # all the magic happens automatically in this function
     def __init__(self, expressions: set):
@@ -65,40 +88,13 @@ class tableau_state(object):
             self.rule_used = None # no rule used
     
     def get(self, var_name):
+        '''
+            Simple getter for some string ``var_name``.
+            
+            :param str var_name: The parameter to request.
+        '''
+        
         return getattr(self, var_name)
-    
-#    def __str__(self):
-#        # create printing string
-#        s = 'Expressions:\n'
-#        for expression in self.get('expressions'):
-#            s += f'    {expression.to_str(True)}\n'
-#        
-#        if self.get('closed'):
-#            s += f'    \u00D7'
-#            
-#        elif self.get('saturated'):
-#            s += f'    \u25EF'
-#            
-#        elif self.get('branched_states') != set():
-#            # convert certain words to unicode symbols
-#            switch_dir = {
-#                'negation': '\u00AC',
-#                'disjunction': '\u2228',
-#                'conjunction': '\u2227',
-#                'implication': '\u2192',
-#                'biimplication': '\u2194'
-#                }
-#            
-#            rule_used_print = switch_dir.get(self.get('rule_used')[0])
-#            
-#            # continue printing string
-#            s += f"Branches using rule '{rule_used_print}:{'T' if self.rule_used[1] else 'F'}':\n"
-#            for branch in self.get('branched_states'):
-#                sb = str(branch)
-#                for line in sb.splitlines():
-#                    s += f'    {line}\n'
-#        
-#        return s
     
     def __str__(self):
         # create printing string
@@ -145,9 +141,19 @@ class tableau_state(object):
         return s
     
     def to_str(self):
+        '''
+            Simple converter that runs ``str(self)``.
+        '''
+        
         return str(self)
     
     def _find_known_constants(self):
+        '''
+            Checks if any expressions in ``self.expressions``
+            are constants,
+            then returns those constants.
+        '''
+        
         constants = set()
         for expression in self.get('expressions'):
             if expression.__class__.__name__ ==  'constant':
@@ -155,6 +161,13 @@ class tableau_state(object):
         return constants
     
     def _find_all_variables(self):
+        '''
+            Finds all variables by running and summing
+            the return value of
+            ``self._find_variables_recursively`` on
+            each expression.
+        '''
+        
         variables = set()
         for expression in self.get('expressions'):
             variables.update(self._find_variables_recursively(expression))
@@ -225,6 +238,8 @@ class tableau_state(object):
                     return branches, (test[0], test[1], expression)
         
         raise ValueError("If the _branch_off function is called there should ALWAYS be a possible branch - but none has been found")
+
+
 
 class expression(object):
     
@@ -576,12 +591,12 @@ def create_tableau(string: str):
         
         The current input considers everything except parentheses and the following specific characters as variables.
         
-        !: negation. Use: !a
-        v: disjunction. Use: a v b
-        ^: conjunction. Use: a ^ b
-        ->: implication. Use: a -> b
-        <->: biimplication. Use: a <-> b
-        ,: new expression, for if the input is a set of expressions. Use: a <-> b , !a
+            - ``!``: Negation (NOT)
+            - ``v``: Disjunction (OR)
+            - ``^``: Conjunction (AND)
+            - ``->``: Implication (IF)
+            - ``<->``: Bi-implication (IFF)
+            - ``,``: New expression
         
         All unnecessary parentheses and all spaces are removed automatically, so feel free to insert them for readability.
         
