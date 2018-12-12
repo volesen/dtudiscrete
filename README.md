@@ -12,14 +12,12 @@ To run the examples:
 	* If `virtualenv` doesn't exist on Windows, make sure you have pip installed.
 	* Make sure you're using the Python 3.6+ version of virtualenv. `python3 -m virtualenv venv` might also do the trick.
 
-1. Install dependencies.
+1. Install dependencies and package.
 	* With an active virtualenv, `pip install -r requirements.txt`.
-
+	* `pip install -e dtudiscrete`
 2. Enjoy!
-	* GCF: Currently, enter `dtudiscrete` and run `./cli.py <a> <b>`, replacing a and b with integers,
-	to get the GCF.
-    * You may need to run `python` instead of `./`. Make sure your virtualenv is active if you do so.
-
+	* Enter `dtudiscrete COMMAND ARG1 ARG2` 
+	
 3. Test!
 	* All tests are easily run using `python -m pytest tests`.
 
