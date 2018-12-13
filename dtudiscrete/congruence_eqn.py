@@ -32,7 +32,7 @@ def congruence_eqn(a, b, n, steps = True,  explanation = ''):
         return explanation if steps else c
 
 
-    # If d does not divide a, there are no solutions
+    # If d does not divide b, there are no solutions
     if b//d != 0:
         explanation += f'For d = gcd({a}, {n}), as d does not divide b, there exists no solutions per "Theorem 5.7"\n'
         return explanation if steps else None
